@@ -41,11 +41,14 @@ class HeadHunterAPI:
         :param salary_from:int,None: конечная заплата
         :return:int
         """
-        if salary_to is None:
-            salary_to = 0
-        if salary_from is None:
-            salary_from = 0
-        return int((salary_to + salary_from)/2)
+        if salary_from is not None:
+            if salary_to is not None:
+                return int((salary_to + salary_from) / 2)
+            else:
+                return salary_from
+        else:
+            return int(salary_to/2)
+
 
     def get_json_list(self, name_company, count_company=1) -> list[dict]:
         """
@@ -78,7 +81,7 @@ class HeadHunterAPI:
                                  'salary': salary,
                                  'currency': currency,
                                  'address': address,
-                                 'url': v.get('url')})
+                                 'url': v.get('alternate_url')})
                 emp['vacancy'] = data
                 data = []
 
