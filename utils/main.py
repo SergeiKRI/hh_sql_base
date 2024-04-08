@@ -3,12 +3,8 @@ from src.manager_base import DBManager
 from src.utils_database import *
 
 
-def found_employers():
+def found_employers(name_bd, params):
     connect_hh = HeadHunterAPI()
-    params = open_params_config()
-    name_bd = input('Введите название базы данных для сохранения')
-    create_database(name_bd, params)
-    create_table(name_bd, params)
 
     while True:
         name_comp = input('Введите название компании')
@@ -25,8 +21,8 @@ def found_employers():
             break
 
 
-def sorter_date():
-    manager = DBManager()
+def sorter_date(name_bd, params):
+    manager = DBManager(name_bd, params)
     while True:
         answer = input('Введите:\n'
                        '1 - получить список всех компаний и количество вакансий у каждой компании.\n'
@@ -43,16 +39,21 @@ def sorter_date():
 
 
 def main():
+    params = open_params_config()
+    name_bd = input('Введите название базы данных для сохранения')
+
+    create_database(name_bd, params)
+    create_table(name_bd, params)
     while True:
         answer = input('Введите:\n'
                        '1 - для поиска интересующих компаний и их сохранения\n'
                        '2 - для работы данными и сортировки\n'
                        '0 - для выхода')
         if answer == '1':
-            found_employers()
+            found_employers(name_bd, params)
             continue
         elif answer == '2':
-            sorter_date()
+            sorter_date(name_bd, params)
             continue
         else:
             break

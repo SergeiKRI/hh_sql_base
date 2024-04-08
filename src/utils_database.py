@@ -47,7 +47,7 @@ def create_table(database_name: str, params: dict):
         cur.execute("""
             CREATE TABLE employers (
                 employer_id INTEGER PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
+                company_name VARCHAR(255) NOT NULL,
                 open_vacancy INTEGER,
                 employer_url TEXT
             );
@@ -77,7 +77,7 @@ def save_data_to_database(employers: list[dict[str, Any]], database_name: str, p
 
             cur.execute(
                 """
-                INSERT INTO employers (employer_id, name, open_vacancy, employer_url)
+                INSERT INTO employers (employer_id, company_name, open_vacancy, employer_url)
                 VALUES (%s, %s, %s, %s)
                 """,
                 (employer['id'], employer['name'], employer['open_vacancies'], employer['alternate_url'])

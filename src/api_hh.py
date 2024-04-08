@@ -29,7 +29,7 @@ class HeadHunterAPI:
         :param url_vacancy: Ссылка вакансии
         :return: json файл
         """
-        vac = request('GET', url_vacancy)
+        vac = request('GET', url_vacancy, params={'per_page': 50})
         if vac.json()['found'] == 0:
             return None
         return vac.json()['items']
