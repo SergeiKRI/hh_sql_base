@@ -30,12 +30,29 @@ def sorter_date(name_bd, params):
                        '3 - получить среднюю зарплату по вакансиям\n'
                        '4 - получать список всех вакансий, у которых зарплата выше средней по всем вакансиям.\n'
                        '5 - получает список всех вакансий, в названии которых содержатся переданные в метод слова\n'
+                       '0 - exit'
                        )
         if answer == '1':
             manager.get_companies_and_vacancies_count()
             continue
-        else:
+        elif answer == '2':
+            manager.get_all_vacancies()
+            continue
+        elif answer == '3':
+            manager.get_avg_salary()
+            continue
+        elif answer == '4':
+            manager.get_vacancies_with_higher_salary()
+            continue
+        elif answer == '5':
+            word = input('Введите слово для поиска')
+            manager.get_vacancies_with_keyword(word)
+            continue
+        elif answer == '0':
             break
+        else:
+            print('Повторите запрос')
+            continue
 
 
 def main():
@@ -46,8 +63,8 @@ def main():
     create_table(name_bd, params)
     while True:
         answer = input('Введите:\n'
-                       '1 - для поиска интересующих компаний и их сохранения\n'
-                       '2 - для работы данными и сортировки\n'
+                       '1 - поиск интересующих компаний и их сохранения\n'
+                       '2 - работа данными и их сортировка\n'
                        '0 - для выхода')
         if answer == '1':
             found_employers(name_bd, params)
@@ -55,8 +72,11 @@ def main():
         elif answer == '2':
             sorter_date(name_bd, params)
             continue
-        else:
+        elif answer == '0':
             break
+        else:
+            print('Ошибка! Повторите запрос')
+            continue
 
 
 if __name__ == '__main__':

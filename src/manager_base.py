@@ -1,4 +1,6 @@
 import psycopg2
+from pandas import DataFrame
+from prettytable import PrettyTable
 
 
 class DBManager:
@@ -23,6 +25,12 @@ class DBManager:
                             JOIN vacancy USING(employer_id)
                             GROUP BY company_name
                             """)
+            data = cur.fetchall()
+            # Определяем твою шапку и данные.
+            column = ['Название', 'количество вакансий']
+            table = DataFrame(data, columns=column)
+            print(table)
+
         conn.close()
 
     def get_all_vacancies(self):
@@ -33,10 +41,17 @@ class DBManager:
         conn = psycopg2.connect(dbname=self.name_base, **self.params)
 
         with conn.cursor() as cur:
-            cur.execute("""SELECT company_name, name_vacancy, salary, currency, vacancy_url
+            cur.execute("""SELECT company_name, name_vacancy, average_salary, currency, vacancy_url
                             FROM vacancy
                             JOIN employers USING(employer_id)
+                            ORDER BY average_salary DESC
                             """)
+            data = cur.fetchall()
+            table = PrettyTable(['Название', 'Вакансия', 'ЗП', 'Валюта', 'Ссылка'])
+
+            for d in data:
+                table.add_row(d[:])
+            print(table)
         conn.close()
 
     def get_avg_salary(self):
@@ -47,8 +62,10 @@ class DBManager:
         conn = psycopg2.connect(dbname=self.name_base, **self.params)
 
         with conn.cursor() as cur:
-            cur.execute("""SELECT AVG(salary)
+            cur.execute("""SELECT AVG(average_salary)
                             FROM vacancy""")
+
+            print(float(cur.fetchall()[0][0]))
         conn.close()
 
     def get_vacancies_with_higher_salary(self):
@@ -59,10 +76,15 @@ class DBManager:
         conn = psycopg2.connect(dbname=self.name_base, **self.params)
 
         with conn.cursor() as cur:
-            cur.execute("""SELECT name_vacancy, salary
+            cur.execute("""SELECT name_vacancy, average_salary
                             FROM vacancy
-                            WHERE salary >= (SELECT AVG(salary) from vacancy)
+                            WHERE average_salary >= (SELECT AVG(average_salary) from vacancy)
                             """)
+            data = cur.fetchall()
+            # Определяем твою шапку и данные.
+            column = ['Вакансия', 'зарплата']
+            table = DataFrame(data, columns=column)
+            print(table)
         conn.close()
 
     def get_vacancies_with_keyword(self, found_name):
@@ -73,8 +95,13 @@ class DBManager:
         conn = psycopg2.connect(dbname=self.name_base, **self.params)
 
         with conn.cursor() as cur:
-            cur.execute(f"""SELECT name_vacancy, salary
+            cur.execute(f"""SELECT name_vacancy, average_salary
                             FROM vacancy
                             WHERE name_vacancy LIKE('%{found_name}%')
                         """)
+            data = cur.fetchall()
+            # Определяем твою шапку и данные.
+            column = ['Название', 'количество вакансий']
+            table = DataFrame(data, columns=column)
+            print(table)
         conn.close()

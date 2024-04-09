@@ -56,7 +56,7 @@ def create_table(database_name: str, params: dict):
                 vacancy_id INTEGER PRIMARY KEY,
                 employer_id INT REFERENCES employers(employer_id),
                 name_vacancy VARCHAR NOT NULL,
-                salary INT,
+                average_salary INT,
                 currency VARCHAR(7),
                 vacancy_url TEXT,
                 address VARCHAR(255)
@@ -88,7 +88,7 @@ def save_data_to_database(employers: list[dict[str, Any]], database_name: str, p
             for vacancy in vacancy_employer:
                 cur.execute(
                     """
-                    INSERT INTO vacancy (vacancy_id, employer_id, name_vacancy, salary, currency, vacancy_url, address)
+                    INSERT INTO vacancy (vacancy_id, employer_id, name_vacancy, average_salary, currency, vacancy_url, address)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     """,
                     (vacancy['id'], employer['id'], vacancy['name'], vacancy['salary'],
